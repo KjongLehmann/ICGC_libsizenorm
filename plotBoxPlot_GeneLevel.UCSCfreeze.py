@@ -170,6 +170,11 @@ def main():
     gid  = gid[sidx]
     data = data[sidx,:]
 
+    sidx = sp.argsort(gtid)
+    gtid = gtid[sidx]
+    data = data[:,sidx]
+
+
     if gtid_star.shape[0] != gtid.shape[0]:
         midx = sp.in1d(gtid, gtid_star)
         gtid = gtid[midx]
@@ -194,7 +199,6 @@ def main():
     ### find overlap
     instar = sp.in1d(gtid, gtid_star)
     intophat = sp.in1d(gtid_star, gtid)
-
     assert instar.sum() == intophat.sum(), 'Samples do not match'
     assert instar.sum() == gtid.shape[0], 'Partial mismatch of ids'
     assert intophat.sum() == gtid_star.shape[0], 'Partial mismatch of ids'
@@ -206,7 +210,7 @@ def main():
     
     ### fix labels
     gtid = gtid[instar]
-
+    gtid_star = gtid_star[intophat]
     ### done matching
     data = data + data_star
     libSize = getSizeFactor(options.fn_anno, data, gid, withXYMT = True, filterbyPC = False) 
